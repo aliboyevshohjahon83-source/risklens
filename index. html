@@ -1,0 +1,119 @@
+<!DOCTYPE html><html lang="uz"><head><meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<meta name="theme-color" content="#bb1919"><meta name="mobile-web-app-capable" content="yes"><meta name="apple-mobile-web-app-capable" content="yes">
+<title>RiskLens Live</title>
+<link href="https://fonts.googleapis.com/css2?family=Onest:wght@400;600;800&family=Source+Serif+4:wght@600;700&display=swap" rel="stylesheet">
+<style>
+:root{--bg:#fff;--ink:#141414;--mut:#6b6b6b;--acc:#bb1919;--line:#e4e4e4;--soft:#f3f3f3;--good:#15803d;--warn:#b86e00;--bad:#bb1919}
+@media(prefers-color-scheme:dark){:root{--bg:#121212;--ink:#f2f2f2;--mut:#a0a0a0;--acc:#ff5a4f;--line:#2c2c2c;--soft:#202020;--good:#5ed48a;--warn:#f0a63a;--bad:#ff6b5e}}
+*{box-sizing:border-box}html{scroll-padding-top:60px}
+body{margin:0;background:var(--bg);color:var(--ink);font:400 15px/1.45 Onest,system-ui,sans-serif;padding-bottom:calc(70px + env(safe-area-inset-bottom,0px))}
+button{font:inherit;cursor:pointer;color:inherit}
+header{position:sticky;top:0;z-index:5;background:var(--bg);padding:calc(10px + env(safe-area-inset-top,0px)) 16px 8px;display:flex;justify-content:space-between;align-items:center}
+h1{margin:0;font-size:24px;font-weight:800;letter-spacing:-.03em}h1 i{color:var(--acc);font-style:normal}
+.hb button{border:1px solid var(--line);background:none;border-radius:20px;padding:6px 12px;font-weight:700;margin-left:6px}
+.spin{animation:s 1s linear infinite;display:inline-block}@keyframes s{to{transform:rotate(360deg)}}
+.tabs{display:flex;overflow-x:auto;gap:22px;padding:0 16px;border-bottom:1px solid var(--line);border-top:1px solid var(--line)}
+.tabs button{background:none;border:0;border-bottom:3px solid transparent;padding:11px 0;font-weight:700;color:var(--mut);white-space:nowrap}.tabs .on{color:var(--ink);border-color:var(--ink)}
+main{max-width:680px;margin:0 auto}.pad{padding:14px 16px}
+.live{font-size:12px;color:var(--mut);padding:8px 16px}.live b{color:var(--acc)}
+.hero img{width:100%;aspect-ratio:16/9;object-fit:cover;display:block;background:var(--soft)}
+.hero a,.it a{color:inherit;text-decoration:none}
+.hl{font-family:"Source Serif 4",Georgia,serif;font-weight:700;line-height:1.2;margin:0}
+.hero .hl{font-size:26px;padding:14px 16px 0}.hero p{margin:8px 16px 14px;font-family:"Source Serif 4",Georgia,serif;font-size:17px;color:var(--mut)}
+.it{border-top:1px solid var(--line);padding:14px 16px}.it a{display:flex;gap:12px;justify-content:space-between}
+.it .hl{font-size:18px}.it img{width:104px;height:78px;object-fit:cover;flex:none;background:var(--soft)}
+.meta{font-size:13px;color:var(--mut);margin-top:8px}.meta span+span:before{content:"|";margin:0 8px;color:var(--line)}
+.dot{display:inline-block;width:8px;height:8px;border-radius:50%;margin-right:5px}
+.card{border:1px solid var(--line);border-radius:12px;padding:14px;margin-bottom:12px}
+h2{font-size:17px;margin:0 0 8px;font-weight:800}
+details{border-top:1px solid var(--line);padding:10px 0}details:first-of-type{border:0}
+summary{display:flex;gap:10px;align-items:center;cursor:pointer;list-style:none}summary::-webkit-details-marker{display:none}
+.code{width:34px;height:34px;border-radius:50%;display:grid;place-items:center;font-weight:800;font-size:12px;color:#fff;flex:none}
+.nm{flex:1;font-weight:600}.pair,.mut{font-size:13px;color:var(--mut)}
+.bar{height:7px;border-radius:4px;background:var(--soft);margin-top:4px;overflow:hidden}.bar i{display:block;height:100%}
+.row{display:grid;grid-template-columns:1fr 1.4fr 40px;gap:8px;align-items:center;font-size:13px;margin:6px 0}
+input[type=range]{width:100%;accent-color:var(--acc)}
+input[type=number]{width:100%;font:inherit;color:var(--ink);background:var(--soft);border:1px solid var(--line);border-radius:10px;padding:10px}
+.grid{display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-top:10px}.m{background:var(--soft);border-radius:10px;padding:10px;font-size:13px}.m b{display:block;font-size:18px}
+.btn{background:var(--acc);color:#fff;border:0;border-radius:10px;padding:11px 16px;font-weight:700}
+.up{color:var(--good)}.dn{color:var(--bad)}
+nav{position:fixed;left:0;right:0;bottom:0;display:flex;background:var(--bg);border-top:1px solid var(--line);padding:6px 4px calc(6px + env(safe-area-inset-bottom,0px))}
+nav button{flex:1;border:0;background:none;color:var(--mut);font-size:12px;font-weight:600}nav .on{color:var(--ink)}nav span{display:block;font-size:20px}
+svg{width:100%;height:auto;display:block}svg text{fill:var(--mut);font:11px Onest,sans-serif}
+.an p{margin:0 0 10px}
+</style></head><body>
+<header><h1>Risk<i>Lens</i></h1><div class="hb"><button id="rf" aria-label="Refresh">⟳</button><button id="lg">UZ | EN</button></div></header>
+<main id="app"></main><nav id="nav"></nav>
+<script>
+const T={},a=(k,u,e)=>T[k]={uz:u,en:e};
+a("news","Yangilik","News");a("mkt","Bozor","Market");a("risk","Risk","Risk");a("ai","Tahlil","Insight");
+a("all","Hammasi","All");a("live","Jonli","Live");a("upd","Yangilandi","Updated");a("wait","Yangiliklar yuklanmoqda…","Loading news…");
+a("err","Yangiliklarni yuklab boʻlmadi. Internetni tekshiring va ⟳ ni bosing.","Couldn’t load news. Check your connection and tap ⟳.");
+a("old","Oflayn nusxa koʻrsatilyapti","Showing an offline copy");a("en","Sarlavhalar manbada ingliz tilida.","Headlines are shown in the source language.");
+a("map","Soha xaritasi: istiqbol va xavf","Sector map: outlook vs risk");a("best","Eng yaxshi zona","Sweet spot");a("ax","Xavf →","Risk →");a("ay","Istiqbol ↑","Outlook ↑");
+a("sec","Sohalar reytingi (yangiliklardan hisoblanadi)","Sector ranking (computed from news)");a("ol","Istiqbol","Outlook");a("rk","Xavf","Risk");a("cnt","ta yangilik","stories");
+a("w","Portfel tarkibi","Portfolio mix");a("cap","Kapital ($)","Capital ($)");a("vol","Yillik tebranish","Annual volatility");a("var","Oylik VaR (95%)","1-month VaR (95%)");
+a("sc","Xavf bali","Risk score");a("div","Diversifikatsiya","Diversification");a("pol","Portfel istiqboli","Portfolio outlook");a("rc","Vazn va xavf hissasi","Weight vs risk share");a("st","Stress-test","Stress test");
+a("lo","Past","Low");a("md","Oʻrta","Medium");a("hi","Yuqori","High");
+a("disc","Oʻquv vositasi, investitsiya maslahati emas. Ballar yangilik sarlavhalaridagi soʻzlarga asoslangan taxminiy model.","Educational tool, not investment advice. Scores are a rough model based on headline wording.");
+a("ant","Avtomatik tahlil","Automatic insight");
+const S=[
+{c:"AI",n:["Texnologiya va AI","Technology & AI"],o:70,r:60,v:28,k:/\b(ai|artificial|chip|chips|nvidia|tech|software|data cent\w*|cyber\w*|apple|google|microsoft|openai|semiconductor\w*|robot\w*|tesla)\b/g},
+{c:"EN",n:["Energetika","Energy"],o:55,r:62,v:30,k:/\b(oil|gas|crude|opec|energy|fuel|diesel|solar|power|electricity|petrol)\b/g},
+{c:"FN",n:["Moliya","Financials"],o:52,r:60,v:22,k:/\b(bank\w*|rates?|inflation|bonds?|yields?|fed|stocks?|shares|markets?|lend\w*|mortgage\w*|loans?|dollar|currency|ftse|dow|nasdaq|invest\w*)\b/g},
+{c:"HC",n:["Sogʻliqni saqlash","Healthcare"],o:58,r:40,v:16,k:/\b(health\w*|drugs?|pharma\w*|vaccine\w*|nhs|hospital\w*|medic\w*)\b/g},
+{c:"IN",n:["Sanoat va logistika","Industrials & logistics"],o:54,r:55,v:20,k:/\b(trade|tariffs?|factor\w*|manufactur\w*|shipping|ports?|exports?|steel|auto\w*|cars?|airlines?|rail\w*|supply|jobs?)\b/g},
+{c:"CO",n:["Iste’mol va gaming","Consumer & gaming"],o:48,r:50,v:21,k:/\b(retail\w*|shops?|consumer\w*|food|prices?|sales|brands?|restaurants?|tourism|gaming|casino\w*|spending)\b/g}];
+const POS=/\b(rise|rises|rose|surge\w*|gains?|record|growth|boost\w*|beats?|profits?|rall\w+|jump\w*|soar\w*|recover\w*|upgrade\w*|wins?|deal)\b/g,NEG=/\b(fall|falls|fell|drops?|dropped|slump\w*|plunge\w*|loss\w*|cuts?|fears?|crisis|war|warns?|recession|default\w*|probe|fines?|fined|strikes?|declin\w+|sink\w*|collaps\w+|bans?|attack\w*|layoffs?|slash\w*)\b/g;
+const SH=[["Foiz +1%","Rates +1%",[-9,-3,2,-3,-5,-6]],["Neft −20%","Oil −20%",[1,-18,0,0,-2,2]],["AI tuzatish −25%","AI correction −25%",[-25,-4,-6,-3,-8,-6]],["Yaqin Sharq keskinlashuvi","Middle East escalation",[-6,10,-4,-1,-5,-5]]];
+const F=[["Business","https://feeds.bbci.co.uk/news/business/rss.xml"],["Technology","https://feeds.bbci.co.uk/news/technology/rss.xml"],["World","https://feeds.bbci.co.uk/news/world/rss.xml"],["CNBC","https://www.cnbc.com/id/10001147/device/rss/rss.html"],["Guardian","https://www.theguardian.com/uk/business/rss"]];
+const API="https://api.rss2json.com/v1/api.json?rss_url=";
+let lang=(navigator.language||"uz").slice(0,2)=="en"?"en":"uz",tab="news",cat="all",items=[],upd=0,err=0,busy=0,old=0,W=[30,15,15,15,15,10],cap=10000;
+const $=s=>document.querySelector(s),t=k=>T[k][lang],pick=x=>x[lang=="uz"?0:1],cl=(x,l=0,h=100)=>Math.max(l,Math.min(h,Math.round(x)));
+const esc=s=>String(s||"").replace(/[&<>"']/g,c=>({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#39;"}[c]));
+const safe=u=>/^https?:\/\//.test(u||"")?esc(u):"";
+const txt=h=>{try{return(new DOMParser().parseFromString(h||"","text/html").body.textContent||"").trim().slice(0,220)}catch(e){return""}};
+const ago=ms=>{const m=Math.max(1,Math.floor((Date.now()-ms)/6e4));return m<60?m+(lang=="uz"?" daq oldin":" mins ago"):m<1440?Math.floor(m/60)+(lang=="uz"?" soat oldin":" hrs ago"):Math.floor(m/1440)+(lang=="uz"?" kun oldin":" days ago")};
+const cnt=(s,r)=>(s.match(new RegExp(r.source,"g"))||[]).length;
+function tag(x){const s=(x.t+" "+x.x).toLowerCase(),c=S.map(z=>cnt(s,z.k)),m=Math.max(...c);x.sec=m>0?c.indexOf(m):-1;const p=cnt(s,POS),n=cnt(s,NEG);x.sent=p>n?1:n>p?-1:0}
+async function load(){busy=1;paint();
+const rs=await Promise.allSettled(F.map(f=>fetch(API+encodeURIComponent(f[1])).then(r=>r.json()).then(j=>{if(j.status!=="ok")throw 0;return j.items.map(i=>({src:f[0],t:i.title,l:i.link,d:Date.parse(String(i.pubDate).replace(" ","T")+"Z")||Date.now(),img:i.thumbnail||(i.enclosure&&i.enclosure.link)||"",x:txt(i.description)}))})));
+let all=[];rs.forEach(r=>{if(r.status=="fulfilled")all=all.concat(r.value)});
+if(all.length){const seen={};all=all.filter(x=>!seen[x.l]&&(seen[x.l]=1)).sort((p,q)=>q.d-p.d).slice(0,60);all.forEach(tag);items=all;upd=Date.now();err=0;old=0;try{localStorage.setItem("rl",JSON.stringify({items,upd}))}catch(e){}}
+else{err=1;if(!items.length){try{const c=JSON.parse(localStorage.getItem("rl")||"null");if(c){items=c.items;upd=c.upd;old=1;err=0}}catch(e){}}}
+busy=0;view()}
+function liveS(){return S.map((z,i)=>{const a=items.filter(x=>x.sec==i),net=a.reduce((s,x)=>s+x.sent,0),ng=a.filter(x=>x.sent<0).length;return{...z,cn:a.length,lo:cl(z.o+Math.max(-15,Math.min(15,net*3))),lr:cl(z.r+Math.min(12,ng*2))}})}
+const col=(o,r)=>o-r>=8?"var(--good)":o-r>=-8?"var(--warn)":"var(--bad)";
+function calc(){const sum=W.reduce((x,y)=>x+y,0)||1,w=W.map(x=>x/sum),v=S.map(s=>s.v),m=w.map((_,i)=>w.reduce((x,wj,j)=>x+wj*v[i]*v[j]*(i==j?1:.55),0)),vr=w.reduce((x,wi,i)=>x+wi*m[i],0),vol=Math.sqrt(vr);
+return{w,vol,rc:w.map((wi,i)=>wi*m[i]/vr),var95:1.645*vol/100/Math.sqrt(12)*cap,sc:cl((vol-12)/18*100),eff:1/w.reduce((x,y)=>x+y*y,0)}}
+const bar=(p,c,h=7)=>`<div class="bar" style="height:${h}px"><i style="width:${p}%;background:${c}"></i></div>`;
+function mapSvg(L){const x=r=>34+(r-30)/60*296,y=o=>220-(o-30)/70*210;
+let s=`<svg viewBox="0 0 340 250" role="img" aria-label="${t("map")}"><rect x="34" y="10" width="296" height="210" rx="8" fill="var(--soft)"/><line x1="${x(60)}" x2="${x(60)}" y1="10" y2="220" stroke="var(--line)" stroke-dasharray="3 4"/><line x1="34" x2="330" y1="${y(60)}" y2="${y(60)}" stroke="var(--line)" stroke-dasharray="3 4"/><text x="42" y="26">★ ${t("best")}</text><text x="182" y="242" text-anchor="middle">${t("ax")}</text><text x="8" y="120" transform="rotate(-90 8 120)" text-anchor="middle">${t("ay")}</text>`;
+L.forEach(z=>s+=`<circle cx="${x(z.lr)}" cy="${y(z.lo)}" r="16" fill="${col(z.lo,z.lr)}"/><text x="${x(z.lr)}" y="${y(z.lo)+4}" text-anchor="middle" style="fill:#fff;font-weight:800">${z.c}</text>`);return s+"</svg>"}
+function insight(){const L=liveS().sort((p,q)=>(q.lo-q.lr)-(p.lo-p.lr)),b=L[0],w=L[L.length-1],c=calc(),ti=c.rc.indexOf(Math.max(...c.rc)),ps=items.filter(x=>x.sent>0).length,ng=items.filter(x=>x.sent<0).length,f=n=>Math.round(n).toLocaleString("en-US");
+const hs=items.filter(x=>x.sec==S.findIndex(z=>z.c==b.c)).slice(0,3).map(x=>`• ${esc(x.t)}`).join("<br>");
+const tip=c.sc>=65?(lang=="uz"?"Portfel xavfi yuqori: tebranishi past sohalar (masalan, sogʻliqni saqlash) ulushini oshirishni koʻrib chiqing.":"Portfolio risk is high: consider adding lower-volatility sectors such as healthcare."):c.sc>=35?(lang=="uz"?"Xavf oʻrtacha: eng katta xavf hissasi bergan sohani nazorat qiling.":"Risk is moderate: keep an eye on the sector adding the most risk."):(lang=="uz"?"Xavf past, lekin diversifikatsiyani saqlang.":"Risk is low; keep the mix diversified.");
+return lang=="uz"?`<p>Soʻnggi ${items.length} ta yangilikdan <b class="up">${ps} tasi ijobiy</b>, <b class="dn">${ng} tasi salbiy</b> ruhda.</p><p>Eng istiqbolli: <b>${pick(b.n)}</b> (istiqbol ${b.lo}, xavf ${b.lr}). Eng zaif: <b>${pick(w.n)}</b> (${w.lo}/${w.lr}).</p><p>Portfelingiz: tebranish ${c.vol.toFixed(1)}%, oylik VaR $${f(c.var95)}. Eng katta xavf hissasi: ${pick(S[ti].n)}. ${tip}</p><p class="mut">${hs}</p>`:`<p>Of the latest ${items.length} stories, <b class="up">${ps} read positive</b> and <b class="dn">${ng} negative</b>.</p><p>Strongest: <b>${pick(b.n)}</b> (outlook ${b.lo}, risk ${b.lr}). Weakest: <b>${pick(w.n)}</b> (${w.lo}/${w.lr}).</p><p>Your portfolio: volatility ${c.vol.toFixed(1)}%, 1-month VaR $${f(c.var95)}. Biggest risk share: ${pick(S[ti].n)}. ${tip}</p><p class="mut">${hs}</p>`}
+function item(x,hero){const sc=x.sec>=0?pick(S[x.sec].n):x.src,img=safe(x.img),dot=`<span class="dot" style="background:${x.sent>0?"var(--good)":x.sent<0?"var(--bad)":"var(--warn)"}"></span>`,mt=`<div class="meta"><span>${ago(x.d)}</span><span>${dot}${esc(x.src)}</span><span>${esc(sc)}</span></div>`;
+return hero?`<div class="hero"><a href="${safe(x.l)}" target="_blank" rel="noopener">${img?`<img src="${img}" alt="" onerror="this.remove()">`:""}<h3 class="hl">${esc(x.t)}</h3><p>${esc(x.x)}</p></a><div style="padding:0 16px 14px">${mt}</div></div>`:`<div class="it"><a href="${safe(x.l)}" target="_blank" rel="noopener"><div><h3 class="hl">${esc(x.t)}</h3>${mt}</div>${img?`<img src="${img}" alt="" onerror="this.remove()">`:""}</a></div>`}
+function view(){$("#rf").innerHTML=busy?'<span class="spin">⟳</span>':"⟳";
+$("#nav").innerHTML=[["news","📰"],["mkt","📊"],["risk","⚖️"],["ai","✨"]].map(([k,i])=>`<button class="${tab==k?"on":""}" data-t="${k}"><span>${i}</span>${t(k)}</button>`).join("");
+const A=$("#app");
+if(tab=="news"){const l=items.filter(x=>cat=="all"||x.src==cat);
+A.innerHTML=`<div class="tabs">${["all",...F.map(f=>f[0])].map(c=>`<button class="${cat==c?"on":""}" data-c="${c}">${c=="all"?t("all"):c}</button>`).join("")}</div><div class="live">${upd?`<b>● ${t("live")}</b> · ${t("upd")} ${ago(upd)}${old?" · "+t("old"):""}`:""} <span>${t("en")}</span></div>${err?`<div class="pad">${t("err")}</div>`:!items.length?`<div class="pad">${t("wait")}</div>`:""}${l[0]?item(l[0],1):""}${l.slice(1,40).map(x=>item(x)).join("")}`}
+if(tab=="mkt"){const L=liveS();A.innerHTML=`<div class="pad"><div class="card"><h2>${t("map")}</h2>${mapSvg(L)}</div><div class="card"><h2>${t("sec")}</h2>${[...L].sort((p,q)=>(q.lo-q.lr)-(p.lo-p.lr)).map(z=>`<details><summary><span class="code" style="background:${col(z.lo,z.lr)}">${z.c}</span><span class="nm">${pick(z.n)}<span class="pair" style="display:block">${t("ol")} ${z.lo} · ${t("rk")} ${z.lr} · ${z.cn} ${t("cnt")}</span></span></summary>${bar(z.lo,"var(--acc)")}${bar(z.lr,"var(--bad)")}${items.filter(x=>x.sec==S.findIndex(s=>s.c==z.c)).slice(0,3).map(x=>`<p class="mut"><a href="${safe(x.l)}" target="_blank" rel="noopener" style="color:inherit">${esc(x.t)}</a></p>`).join("")}</details>`).join("")}</div><p class="mut">${t("disc")}</p></div>`}
+if(tab=="risk"){A.innerHTML=`<div class="pad"><div class="card"><h2>${t("w")}</h2>${S.map((z,i)=>`<div class="row"><span>${pick(z.n)}</span><input type="range" min="0" max="100" value="${W[i]}" data-i="${i}" aria-label="${pick(z.n)}"><b id="wl${i}"></b></div>`).join("")}<label class="mut">${t("cap")}</label><input type="number" inputmode="numeric" id="cap" value="${cap}"></div><div id="res"></div><p class="mut">${t("disc")}</p></div>`;paint()}
+if(tab=="ai"){A.innerHTML=`<div class="pad"><div class="card an"><h2>✨ ${t("ant")}</h2>${items.length?insight():t("wait")}</div><p class="mut">${t("disc")}</p></div>`}}
+function paint(){if(tab!="risk")return;const c=calc(),R=$("#res");if(!R)return;W.forEach((_,i)=>{const e=$("#wl"+i);if(e)e.textContent=Math.round(c.w[i]*100)+"%"});
+const lv=c.sc<35?["lo","var(--good)"]:c.sc<65?["md","var(--warn)"]:["hi","var(--bad)"],f=n=>Math.round(n).toLocaleString("en-US");
+R.innerHTML=`<div class="card"><h2>${t("sc")}: ${c.sc}/100 <span style="color:${lv[1]}">${t(lv[0])}</span></h2>${bar(c.sc,lv[1])}<div class="grid"><div class="m">${t("vol")}<b>${c.vol.toFixed(1)}%</b></div><div class="m">${t("var")}<b>$${f(c.var95)}</b></div><div class="m">${t("div")}<b>${c.eff.toFixed(1)} / 6</b></div><div class="m">${t("pol")}<b>${cl(liveS().reduce((x,z,i)=>x+c.w[i]*z.lo,0))}/100</b></div></div></div><div class="card"><h2>${t("rc")}</h2>${S.map((z,i)=>`<div class="mut">${z.c} · ${pick(z.n)}</div>${bar(c.w[i]*100,"var(--acc)",8)}${bar(c.rc[i]*100,"var(--bad)",8)}`).join("")}</div><div class="card"><h2>${t("st")}</h2>${SH.map(s=>{const l=c.w.reduce((x,wi,i)=>x+wi*s[2][i],0);return`<div class="mut">${pick(s)}</div><div style="display:flex;gap:8px;align-items:center"><div class="bar" style="flex:1;height:10px"><i style="width:${Math.min(100,Math.abs(l)*4)}%;background:${l<0?"var(--bad)":"var(--good)"}"></i></div><b class="${l<0?"dn":"up"}" style="min-width:120px;text-align:right">${l>0?"+":""}${l.toFixed(1)}% · $${f(cap*l/100)}</b></div>`}).join("")}</div>`}
+document.addEventListener("click",e=>{const b=e.target.closest("button");if(!b)return;
+if(b.id=="lg"){lang=lang=="uz"?"en":"uz";document.documentElement.lang=lang;view()}
+else if(b.id=="rf")load();else if(b.dataset.t){tab=b.dataset.t;view();scrollTo(0,0)}else if(b.dataset.c){cat=b.dataset.c;view()}});
+document.addEventListener("input",e=>{const i=e.target;if(i.dataset.i!==undefined){W[+i.dataset.i]=+i.value;paint()}else if(i.id=="cap"){cap=Math.max(0,+i.value||0);paint()}});
+document.addEventListener("visibilitychange",()=>{if(!document.hidden&&Date.now()-upd>3e5)load()});
+setInterval(()=>{if(!document.hidden)load()},3e5);
+try{const m={name:"RiskLens Live",short_name:"RiskLens",display:"standalone",start_url:location.href,background_color:"#ffffff",theme_color:"#bb1919",icons:[{src:"data:image/svg+xml,"+encodeURIComponent('<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 96 96"><rect width="96" height="96" rx="20" fill="#bb1919"/><text x="48" y="64" font-size="52" font-family="sans-serif" font-weight="800" text-anchor="middle" fill="#fff">RL</text></svg>'),sizes:"any",type:"image/svg+xml"}]},l=document.createElement("link");l.rel="manifest";l.href=URL.createObjectURL(new Blob([JSON.stringify(m)],{type:"application/manifest+json"}));document.head.appendChild(l)}catch(e){}
+view();load();
+</script></body></html>
